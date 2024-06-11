@@ -8,32 +8,22 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-     private SecurityCustomerDetailService customerDetailService;
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(customerDetailService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-
-        return daoAuthenticationProvider;
-    };
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.authorizeHttpRequests(authorize-> {
+        http .csrf(csrf -> csrf.disable()). authorizeHttpRequests(authorize-> {
 
-            authorize.requestMatchers("/customer","/product").permitAll();
-        }).cors(cors -> cors.disable());
+            authorize.requestMatchers("/customer/**","/product").permitAll();
+        }).formLogin(Customizer.withDefaults());
+
 
         return http.build();
     };

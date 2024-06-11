@@ -67,6 +67,9 @@ public class CartImpl implements CartService {
     public Set<CartItemDTO> findCartByCustomerId(Long id) {
 
         Set<CartItem> cartItems=cartRepository.findByCustomerId(id);
+        if(cartItems.size()==0){
+            throw new RuntimeException("No cart item found !!");
+        }
         Set<CartItemDTO> cartItemDTOS =  cartItems.stream().map(cartItem -> modelMapper.map(cartItem, CartItemDTO.class)).collect(Collectors.toSet());
         return cartItemDTOS;
     }

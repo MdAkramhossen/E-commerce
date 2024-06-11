@@ -25,23 +25,28 @@ public class CustomerImpl implements CustomerService {
 
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    PasswordEncoder passwordEncoder;
+
 
     @Override
     public void createCustomer(CustomerDTO customerDTO) {
 
        Customer customer = modelMapper.map(customerDTO, Customer.class);
-       customer.setPassword(passwordEncoder.encode(customerDTO.getPassword()));
-       customer.setList(List.of(AppConstants.ROLE_CUSTOMER));
+       List<Customer> checkCustomer=customerRepository.findByEmail(customer.getEmail());
+         if(checkCustomer.get(0)!=null){
+             throw new RuntimeException("Already resisterds");
+
+         }
        customerRepository.save(customer);
     }
 
     @Override
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers() {
+
         List<Customer> customers = customerRepository.findAll();
         List<CustomerDTO> customerDTOList = customers.stream().map(cs ->modelMapper.map(cs, CustomerDTO.class)).collect(Collectors.toList());
-        return (ResponseEntity<List<CustomerDTO>>) customerDTOList;
+        return customerDTOList;
     }
+
+
 }
 

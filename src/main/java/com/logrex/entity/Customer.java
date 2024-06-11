@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Setter
 @Getter
-public class Customer implements UserDetails {
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class Customer implements UserDetails {
     @Column(name = "email")
     private String email;
 
-    @Getter(AccessLevel.NONE)
+//    @Getter(AccessLevel.NONE)
     @Column(name = "password")
     private String password;
 
@@ -63,43 +63,7 @@ public class Customer implements UserDetails {
     protected Time creationTime;
     private boolean enable;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-     private  List<String> list= new ArrayList<>();
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        Collection<SimpleGrantedAuthority> roles= list.stream().map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
 
-        return roles;
-    }
 
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

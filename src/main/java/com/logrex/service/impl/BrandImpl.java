@@ -3,10 +3,12 @@ package com.logrex.service.impl;
 import com.logrex.dto.BrandDTO;
 import com.logrex.dto.CatagoryDTO;
 import com.logrex.entity.Brand;
+import com.logrex.exceptions.NotFoundExceptions;
 import com.logrex.repository.BrandRepository;
 import com.logrex.service.BrandService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class BrandImpl implements BrandService {
 
     @Override
     public CatagoryDTO getBrandById(Long id) {
-        return  modelMapper.map(brandRepository.findById(id).get(), CatagoryDTO.class);
+
+        return  modelMapper.map(brandRepository.findById(id).orElseThrow( ()-> new NotFoundExceptions("Get","id",id)), CatagoryDTO.class);
     }
 }
